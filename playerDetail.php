@@ -8,14 +8,14 @@
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
     <?php
       $page = "player";
       include('nav.php');
       // Connect to the database
-      include('db_mysql.php');
+      include('db/db_mysql.php');
       $player = $_GET['pid'];
       
       // list player information
@@ -46,7 +46,8 @@
 
           // for each game, grab the achievements the player earned (for that game)
           $achieves = array();
-          $subquery = "SELECT A.id id, A.name name, A.points points, E.remark remark FROM earns E, achievement A WHERE A.id = E.achievementId AND E.playerId = {$player} AND A.gameId = {$gid};";
+          $subquery = "SELECT A.id id, A.name name, A.points points, E.remark remark " . 
+            "FROM earns E, achievement A WHERE A.id = E.achievementId AND E.playerId = {$player} AND A.gameId = {$gid};";
           $subresult = mysql_query($subquery);
           $numAchieve = mysql_num_rows($subresult);
           while ($row = mysql_fetch_assoc($subresult)) {
@@ -58,10 +59,18 @@
             $achieves[$aid] = array('name' => $aname, 'points' => $apoint, 'remark' => $aremark);
           }
 
-          // sum up the total points and record
+          // sum up the total points earned for this game
           $earnedPoints = 0;
+          foreach ($achieves as $key => $value) {
+            $earnedPoints += $value['points'];
+          }
 
-          $games[$gid] = array('id' => $gid, 'name' => $gname, 'numAchieve' => $numAchieve, 'earnedPoints' => $earnedPoints, 'achievements' => $achieves);
+          // Store all the game information
+          $games[$gid] = array('id' => $gid, 
+                              'name' => $gname, 
+                              'numAchieve' => $numAchieve, 
+                              'earnedPoints' => $earnedPoints, 
+                              'achievements' => $achieves);
         }
       }
       mysql_close($con);
@@ -79,18 +88,18 @@
       <!-- Player Photo -->
       <div class="row-fluid">
         <div class="span3">
+          <div class="media">
           <?php 
             foreach ($playerInfo as $key => $value) {
               if($value['picture']) {
-                echo '<img style="border-radius:5px;" src="./img/players/' . $value['picture'] . '">';
+                echo '<p><img class="media-object" style="border-radius:5px;" src="img/players/' . $value['picture'] . '"></p>';
               }
               else {
-                echo "No image available.";
-                echo '<div class="pull-left well well-small" style="margin:0px 10px 0px 0px;">' . 
-                  '<i class="icon-user icon-4x"></i></div>';
+                echo '<p style="margin-top:70px;"><div style="font-size:50px;"><i class="icon-user icon-4x icon-border" style="margin:0px 0px 0px 0px;"></i></div></p>';
               }
             }
           ?>
+          </div>
         </div>
         <!-- Player Information -->
         <div class="span9">
@@ -121,10 +130,15 @@
                       $pid = $player;
                       $gid = $value['id'];
                       echo '<tr><td class="span4">' . 
+                        '<a href="gameDetail.php?gid=' . $value['id'] . '">';
+                      if($value['picture']) {
+                        echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="img/games/' . $value['picture'] . '">';
+                      }
+                      else {
+                        echo '<i class="icon-picture icon-3x pull-left" style="margin:0px 10px 0px 0px;"></i>';
+                      }
 
-                        '<a href="./gameDetail.php?gid=' . $value['id'] . '">' .
-                        '<div class="pull-left well well-small" style="width:20px;margin:0px 10px 0px 0px;"></div>' .
-                        '<h4>' . $value['name'] . '</h4>' . 
+                      echo '<h4>' . $value['name'] . '</h4>' . 
                         '</a>' . 
                         '</td>' . 
                         '<td class="span8" colspan="2">' . 
@@ -137,6 +151,7 @@
                         '<h4>' . 
                         $value['numAchieve'] . 
                         ' achievements for ' . $value['earnedPoints'] . ' points' . 
+                        ' <i class="icon-chevron-down"></i>' . 
                         '</h4>' . 
                         '</a>' . 
                         '</div>' .

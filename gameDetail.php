@@ -8,14 +8,14 @@
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
     <?php 
       $page = "game";
       include('nav.php');
       // Connect to the database
-      include('db_mysql.php');
+      include('db/db_mysql.php');
       $gid = $_GET['gid'];
       
       // Retrieve information about currently selected game
@@ -55,12 +55,12 @@
       $numAchieve = mysql_num_rows($result);
 
       // Retrieve the total number of achievements earned by all players
-      $totalAchieveEarned = 0;
+      $achieveEarned = 0;
       $query = "SELECT COUNT(*) AS total FROM achievement, earns WHERE " . 
         "achievement.id = earns.achievementId AND gameId = {$gid};";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
-        $totalAchieveEarned = $row['total'];
+        $achieveEarned = $row['total'];
       }
 
       // Retrieve list of top-scoring players
@@ -87,8 +87,6 @@
           ?>
         </div>
       </div><!--/game title-->
-      <!--Game Information-->
-      <div class="row-fluid">
           <!-- Photo(s) of the game/gameplay
           Number of players who have played this game
           Number/List of achievements
@@ -98,86 +96,111 @@
           BONUS: "Play Now" button that "allows" the user to "play" the game and recieve a score, 
           along with "earning" some achievements?
           -->
+      <!--Game Information-->
+      <div class="row-fluid">
         <div class="span9">
           <div class="row-fluid">
             <!-- Game Photo -->
             <div class="span5">
-              <p><div class="well well-large" style="height:400px;">PHOTO HERE</div></p>
+              <?php
+                if($value['picture']) {
+                  // echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="./img/games/' . $value['picture'] . '">';
+                  echo '<p><img style="border-radius:5px;" src="img/games/' . $value['picture'] . '"></p>';
+                }
+                else {
+                  echo '<p style="margin-top:70px;"><div style="font-size:50px;">' . 
+                    '<i class="icon-picture icon-4x icon-border" style="background-color:#EEE;"></i></div></p><br>';
+                }
+              ?>
+              <br>
               <p><a class="btn btn-primary btn-block btn-large disabled" href="#">Play Now!</a></p>
-            </div>
+            </div><!--/game photo-->
             <div class="span7">
               <!-- Game Info -->
-              <h3 class="span12 pull-left">Game Information</h3>
-              <table class="table-condensed span12">
-                <tbody>
-                  <tr>
-                    <th class="span5"><span class="pull-right">Publisher</span></th>
-                    <td class="span7"><span class="pull-left"><?php echo $gameInfo["publisher"]; ?></span></td>
-                  </tr>
-                  <tr>
-                    <th class="span5"><span class="pull-right">ESRB Rating</span></th>
-                    <td class="span7"><?php echo $gameInfo["rating"]; ?></td>
-                  </tr>
-                  <tr>
-                    <th class="span5"><span class="pull-right">Release Date</span></th>
-                    <td class="span7"><?php echo $gameInfo["releaseDate"]; ?></td>
-                  </tr>
-                  <tr>
-                    <th class="span5"><span class="pull-right">Achievements</span></th>
-                    <td class="span7"><?php echo $numAchieve; ?></td>
-                  </tr>
-                  <tr>
-                    <th class="span5"><span class="pull-right" align="right">Achievements Earned</span></th>
-                    <td class="span7"><?php echo $totalAchieveEarned; ?></td>
-                  </tr>
-                  <tr>
-                    <th class="span5"><span class="pull-right">Total Players</span></th>
-                    <td class="span7"><?php echo $numPlayers; ?></td>
-                  </tr>
-                  <tr>
-                    <th class="span5"></th>
-                    <td class="span7"></td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="row-fluid">
+                <h3 class="pull-left">Game Information</h3>
+              </div>
+              <div class="row-fluid">
+                <table class="span12 table-condensed">
+                  <thead></thead>
+                  <tbody>
+                    <!-- Note: I have set class="span5" & class="span7" in only the first row; table will inherently adjust others to follow suit -->
+                    <tr>
+                      <td class="span5"><span class="pull-right"><strong>Publisher</strong></span></td>
+                      <td class="span7"><?php echo $gameInfo["publisher"]; ?></td>
+                    </tr>
+                    <tr>
+                      <th><span class="pull-right">ESRB Rating</span></th>
+                      <td><?php echo $gameInfo["rating"]; ?></td>
+                    </tr>
+                    <tr>
+                      <th><span class="pull-right">Release Date</span></th>
+                      <td><?php echo $gameInfo["releaseDate"]; ?></td>
+                    </tr>
+                    <tr>
+                      <th><span class="pull-right">Achievements</span></th>
+                      <td><?php echo $numAchieve; ?></td>
+                    </tr>
+                    <tr>
+                      <th><span class="pull-right">Number of Players</span></th>
+                      <td><?php echo $numPlayers; ?></td>
+                    </tr>
+                    <tr>
+                      <th><span class="pull-right">Achievements Earned</span></th>
+                      <td><?php echo $achieveEarned; ?></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div><!--/stats-->
               <!-- Achievements -->
-              <h3 class="span12 pull-left">Achievements</h3>
-              <table class="table table-bordered table-striped span12">
-                <caption></caption>
+              <div class="row-fluid">
+                <h3 class="pull-left">Achievements</h3>
+              </div>
+              <div class="row-fluid">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr><th>Name</th><th>Description</th><th>Points</th></tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                      foreach ($achievements as $key => $value) {
+                        echo '<tr><td>' . $value['name'] . '</td><td><em>' . 
+                          $value['description'] . '</em></td><td>' . 
+                          $value['points'] . '</td></tr>' . "\n";
+                      }
+                    ?>
+                  </tbody>
+                </table>
+              </div><!--/achievements-->
+            </div>
+          </div>
+        </div><!--/game information-->
+        <!--Top 10 Scoring Players-->
+        <div class="span3">
+          <div class="row-fluid">
+            <div class="span12">
+              <h3 class="pull-left span12">Top 10 Players</h3>
+            </div>
+          </div>
+          <div class="row-fluid">
+            <div class="span12">
+              <table class="table">
                 <thead>
-                  <tr><th>Name</th><th>Description</th><th>Points</th></tr>
+                  <!-- Include a "RANK" as well? -->
+                  <tr><th>Score</th><th>Player name</th></tr>
                 </thead>
                 <tbody>
-                  <?php
-                    foreach ($achievements as $key => $value) {
-                      echo '<tr><td>' . $value['name'] . '</td><td><em>' . 
-                        $value['description'] . '</em></td><td>' . 
-                        $value['points'] . '</td></tr>' . "\n";
+                  <?php 
+                    foreach ($players as $key => $value) {
+                      echo '<tr><td>' . $value['score'] . '</td><td>
+                        <a href="playerDetail.php?pid=' . $key . '">' . 
+                        $value['name'] . '</a></td></tr>';
                     }
                   ?>
                 </tbody>
               </table>
-            </div><!--/row-->
-          </div><!--/span-->
-        </div><!--/game information-->
-        <!--Top 10 Scoring Players-->
-        <div class="span3">
-          <h3 class="pull-left span12">Top 10 Players</h3>
-          <table class="table">
-            <thead>
-              <!-- Include a "RANK" as well? -->
-              <tr><th>Score</th><th>Player name</th></tr>
-            </thead>
-            <tbody>
-              <?php 
-                foreach ($players as $key => $value) {
-                  echo '<tr><td>' . $value['score'] . '</td><td>
-                    <a href="./playerDetail.php?pid=' . $key . '">' . 
-                    $value['name'] . '</a></td></tr>';
-                }
-              ?>
-            </tbody>
-          </table>
+            </div>
+          </div>
         </div><!--/top 10 players-->
       </div><!--/row-->
       <?php include('footer.php'); ?>

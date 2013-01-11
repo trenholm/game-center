@@ -7,19 +7,20 @@
     <meta name="description" content="Game Center web application for IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
-    <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
     <?php 
       unset($page);
       include('nav.php');
       // Connect to the database
-      include('db_mysql.php');
+      include('db/db_mysql.php');
       
       // Retrieve the list of games (including thumbnail image?) (order by highest scores earned)
       $games = array();
-      $query = "SELECT id, name FROM game ORDER BY name ASC LIMIT 3;";
+      // $query = "SELECT id, name FROM game ORDER BY name ASC LIMIT 3;";
+      $query = "SELECT G.id, G.name FROM game G, scores S WHERE G.id = S.gameId ORDER BY S.score DESC, G.name ASC LIMIT 3;";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $gid = $row['id'];
@@ -30,7 +31,7 @@
       
       // Retrieve the list of players (order by highest score first?)
       $players = array();
-      $query = "SELECT * FROM player P, scores S WHERE P.id = S.playerId ORDER BY S.score, P.firstName ASC LIMIT 3;";
+      $query = "SELECT * FROM player P, scores S WHERE P.id = S.playerId ORDER BY S.score DESC, P.firstName ASC LIMIT 3;";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $pid = $row['id'];
@@ -50,7 +51,7 @@
           <div class="hero-unit" style="border-radius:20px;">
             <h1>FEATURED GAME!</h1>
             <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-            <p><a class="btn btn-primary btn-large" href="./gameDetail.php?gid=1">Learn more &raquo;</a></p>
+            <p><a class="btn btn-primary btn-large" href="gameDetail.php?gid=1">Learn more &raquo;</a></p>
           </div>
         </div>
       </div>
@@ -97,19 +98,24 @@
           <table class="table table-bordered table-striped">
             <thead>
               <tr><td>
-              <span class="pull-left">
                 <h2>TOP GAMES</h2>
-                <a class="btn" href="./gameList.php">View more games &raquo;</a>
-              </span>
+                <a class="btn offset1" href="gameList.php">View more games &raquo;</a>
               </td></tr>
             </thead>
             <tbody>
               <?php 
               foreach ($games as $key => $value) {
                 echo '<tr><td>' . 
-                  '<a href="./gameDetail.php?gid=' . $value['id'] . '">' . 
+                  '<a href="gameDetail.php?gid=' . $value['id'] . '">';
                   // <img style="border-radius:5px; src="">
-                  '<div class="pull-left well well-small" style="width:20px;margin:0px 10px 0px 0px;"></div>' .
+                if($value['picture']) {
+                  echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="./img/games/' . $value['picture'] . '">';
+                }
+                else {
+                  echo '<i class="icon-picture icon-3x pull-left" style="margin:0px 10px 0px 0px;"></i>';
+                }
+                echo 
+                // '<div class="pull-left well well-small" style="width:20px;margin:0px 10px 0px 0px;"></div>' .
                   '<h4>' . $value['name'] . '</h4></a></td>' . 
                   // '<td>' . $value['rating'] . '</td>' . 
                   '</tr>' . "\n";
@@ -123,14 +129,14 @@
             <thead>
               <tr><td>
                 <h2>TOP PLAYERS</h2>
-                <a class="btn" href="./playerList.php">See more players &raquo;</a>
+                <a class="btn offset1" href="playerList.php">See more players &raquo;</a>
               </td></tr>
             </thead>
             <tbody>
               <?php 
                   foreach ($players as $key => $value) {
                     echo '<tr><td>' . 
-                      '<a href="./playerDetail.php?pid=' . $value['id'] . '">';
+                      '<a href="playerDetail.php?pid=' . $value['id'] . '">';
                     if($value['picture']) {
                       echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="./img/players/' . $value['picture'] . '">';
                     }

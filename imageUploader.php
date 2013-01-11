@@ -36,8 +36,6 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
 		}
 		else {
 			echo "There was an error uploading the file. Please try again.";
-			// Dynamically grab the PlayerID to ensure we go to the correct "profile"
-			header('Location: profile.php?pid=' . $pid . '&success=false', true, 302) ;
 		}
 	}
 	else { //Error occurred
@@ -46,7 +44,6 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
 }
 else { //Error: invalid file type or file size too large
 	echo "File was wrong file type or too large.";
-	// pass message along saying file too large or wrong file type
 }
 
 // Returns error message

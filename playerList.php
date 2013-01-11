@@ -7,15 +7,15 @@
     <meta name="description" content="Game Center web application for IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
-    <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
   <body>
     <?php
       $page = "player";
       include('nav.php');
       // Connect to the database
-      include('db_mysql.php');
+      include('db/db_mysql.php');
       $searchParam = mysql_real_escape_string($_GET['name']);
          
       // list player information
@@ -61,9 +61,9 @@
                 <?php 
                   foreach ($players as $key => $value) {
                     echo '<tr><td>' . 
-                      '<a href="./playerDetail.php?pid=' . $value['id'] . '">';
+                      '<a href="playerDetail.php?pid=' . $value['id'] . '">';
                     if($value['picture']) {
-                      echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="./img/players/' . $value['picture'] . '">';
+                      echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="img/players/' . $value['picture'] . '">';
                     }
                     else {
                       echo '<i class="icon-user icon-3x icon-border pull-left" style="padding:2px 7px 2px 7px;margin:0px 10px 0px 0px;"></i>';
