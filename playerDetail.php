@@ -18,6 +18,10 @@
       include('db/db_mysql.php');
       $player = $_GET['pid'];
       
+      // default values
+      $totalScore = 0;
+      $numGamesPlayed = 0;
+
       // list player information
       $playerInfo = array();
       $query = "SELECT * FROM player WHERE id = {$player};";
@@ -29,7 +33,11 @@
         $pic = $row['picture'];
         $sex = $row['sex'];
 
-        $playerInfo[$pid] = array('id' => $pid, 'firstName' => $fname, 'lastName' => $lname, 'picture' => $pic, 'sex' => $sex);
+        $playerInfo = array('id' => $pid, 
+                                  'firstName' => $fname, 
+                                  'lastName' => $lname, 
+                                  'picture' => $pic, 
+                                  'sex' => $sex);
       }
      
       // list the games this player has played
@@ -46,8 +54,9 @@
 
           // for each game, grab the achievements the player earned (for that game)
           $achieves = array();
-          $subquery = "SELECT A.id id, A.name name, A.points points, E.remark remark " . 
-            "FROM earns E, achievement A WHERE A.id = E.achievementId AND E.playerId = {$player} AND A.gameId = {$gid};";
+          $subquery = "SELECT A.id id, A.name name, A.points points, E.remark remark, E.dateEarned earned" . 
+            " FROM earns E, achievement A" . 
+            " WHERE A.id = E.achievementId AND E.playerId = {$player} AND A.gameId = {$gid};";
           $subresult = mysql_query($subquery);
           $numAchieve = mysql_num_rows($subresult);
           while ($row = mysql_fetch_assoc($subresult)) {
@@ -55,8 +64,12 @@
             $aname = $row['name'];
             $apoint = $row['points'];
             $aremark = $row['remark'];
+            $aearned = $row['earned'];
 
-            $achieves[$aid] = array('name' => $aname, 'points' => $apoint, 'remark' => $aremark);
+            $achieves[$aid] = array('name' => $aname, 
+                                    'points' => $apoint, 
+                                    'remark' => $aremark, 
+                                    'dateEarned' => $aearned);
           }
 
           // sum up the total points earned for this game
@@ -64,6 +77,8 @@
           foreach ($achieves as $key => $value) {
             $earnedPoints += $value['points'];
           }
+          // add each game's score to the player's total score
+          $totalScore += $earnedPoints;
 
           // Store all the game information
           $games[$gid] = array('id' => $gid, 
@@ -81,7 +96,7 @@
       <div class="row-fluid">
         <div class="span12">
           <?php 
-            echo "<h1>" . $playerInfo[$player]['firstName'] . " " . $playerInfo[$player]['lastName'] . "</h1>";
+            echo "<h1>" . $playerInfo['firstName'] . " " . $playerInfo['lastName'] . "</h1>";
           ?>
         </div>
       </div>
@@ -90,13 +105,12 @@
         <div class="span3">
           <div class="media">
           <?php 
-            foreach ($playerInfo as $key => $value) {
-              if($value['picture']) {
-                echo '<p><img class="media-object" style="border-radius:5px;" src="img/players/' . $value['picture'] . '"></p>';
-              }
-              else {
-                echo '<p style="margin-top:70px;"><div style="font-size:50px;"><i class="icon-user icon-4x icon-border" style="margin:0px 0px 0px 0px;"></i></div></p>';
-              }
+            if($playerInfo['picture']) {
+              echo '<img class="media-object" style="border-radius:5px;margin-top:20px;" src="img/players/' . $playerInfo['picture'] . '">';
+            }
+            else {
+              echo '<div style="font-size:50px;margin-top:65px;margin-bottom:45px;">' . 
+                '<i class="icon-user icon-4x icon-border media-object"></i></div>';
             }
           ?>
           </div>
@@ -105,13 +119,27 @@
         <div class="span9">
           <div class="row-fluid">
             <h3 class="span12 pull-left">Player Information</h3>
-            <table class="table-condensed span12">
+          </div>
+          <div class="row-fluid">
+            <table class="span12 table-condensed">
+              <thead></thead>
               <tbody>
-                <?php
-                  foreach ($playerInfo as $key => $value) {
-                     # code...
-                   } 
-                ?>
+                <tr>
+                  <td class="span4"><strong><span class="pull-right">Name</span></strong></td>
+                  <td class="span8"><?php echo $playerInfo['firstName'] . ' ' . $playerInfo['lastName']; ?></td>
+                </tr>
+                <tr>
+                  <th><span class="pull-right">Sex</span></th>
+                  <td><?php echo $playerInfo['sex']; ?></td>
+                </tr>
+                <tr>
+                  <th><span class="pull-right">Games Played</span></th>
+                  <td><?php echo $numGamesPlayed; ?></td>
+                </tr>
+                <tr>
+                  <th><span class="pull-right">Gamer Score</span></th>
+                  <td><?php echo $totalScore; ?></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -132,7 +160,7 @@
                       echo '<tr><td class="span4">' . 
                         '<a href="gameDetail.php?gid=' . $value['id'] . '">';
                       if($value['picture']) {
-                        echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="img/games/' . $value['picture'] . '">';
+                        echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin-right:10px;" src="img/games/' . $value['picture'] . '">';
                       }
                       else {
                         echo '<i class="icon-picture icon-3x pull-left" style="margin:0px 10px 0px 0px;"></i>';
@@ -160,14 +188,15 @@
 
                         $ach = $value['achievements'];
                         foreach ($ach as $key => $value) {
-                          echo ' ' . 
-                          // '<tr id="#"><td></td><td>' . 
-                          $value['name'] . ' ' . 
-                          // '</td><td>' . 
-                          $value['points'] . ' points ' . 
+                          echo '<li><strong>' . 
+                            // '<tr id="#"><td></td><td>' . 
+                            $value['name'] . '</strong> on ' . 
+                            $value['dateEarned'] . ' for '  .
                             // '</td><td>' . 
-                          $value['remark'] . ' <br>'
-                            // '</td></tr>'
+                            $value['points'] . ' points: <em>"' . 
+                              // '</td><td>' . 
+                            $value['remark'] . '"</em> <br></li>'
+                              // '</td></tr>'
                             ;
                         }
 
@@ -177,11 +206,9 @@
 
                       
                     }
-
-                    // echo '</div>';
                   }
                   else {
-                    echo $playerInfo[$player]['firstName'] . " has not played any games yet!<br>";
+                    echo $playerInfo['firstName'] . " has not played any games yet!<br>";
                   }
                 ?>
               </tbody>

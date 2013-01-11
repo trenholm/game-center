@@ -104,15 +104,13 @@
             <div class="span5">
               <?php
                 if($value['picture']) {
-                  // echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="./img/games/' . $value['picture'] . '">';
-                  echo '<p><img style="border-radius:5px;" src="img/games/' . $value['picture'] . '"></p>';
+                  echo '<img style="border-radius:5px;margin-top:20px;margin-bottom:45px;" src="img/games/' . $value['picture'] . '">';
                 }
                 else {
-                  echo '<p style="margin-top:70px;"><div style="font-size:50px;">' . 
-                    '<i class="icon-picture icon-4x icon-border" style="background-color:#EEE;"></i></div></p><br>';
+                  echo '<div style="font-size:50px;margin-top:65px;margin-bottom:45px;">' . 
+                    '<i class="icon-picture icon-4x icon-border" style="background-color:#EEE;"></i></div>';
                 }
               ?>
-              <br>
               <p><a class="btn btn-primary btn-block btn-large disabled" href="#">Play Now!</a></p>
             </div><!--/game photo-->
             <div class="span7">
@@ -124,10 +122,9 @@
                 <table class="span12 table-condensed">
                   <thead></thead>
                   <tbody>
-                    <!-- Note: I have set class="span5" & class="span7" in only the first row; table will inherently adjust others to follow suit -->
                     <tr>
-                      <td class="span5"><span class="pull-right"><strong>Publisher</strong></span></td>
-                      <td class="span7"><?php echo $gameInfo["publisher"]; ?></td>
+                      <th><span class="pull-right">Publisher</span></th>
+                      <td><?php echo $gameInfo["publisher"]; ?></td>
                     </tr>
                     <tr>
                       <th><span class="pull-right">ESRB Rating</span></th>
