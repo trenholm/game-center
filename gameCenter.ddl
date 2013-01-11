@@ -70,12 +70,14 @@ INSERT INTO player (firstName, lastName, sex) VALUES ("Yves", "Lucet", "Male");
 INSERT INTO player (firstName, lastName, sex) VALUES ("Yong", "Gao", "Male");
 INSERT INTO player (firstName, lastName, sex) VALUES ("Bowen", "Hui", "Female");
 INSERT INTO player (firstName, lastName, sex) VALUES ("Alan", "Paeth", "Male");
+INSERT INTO player (firstName, lastName, sex) VALUES ("Jodie", "Foster", "Female");
 
 UPDATE player SET picture = "./img/players/1.jpg" WHERE id = 1;
 UPDATE player SET picture = "./img/players/2.jpg" WHERE id = 2;
 UPDATE player SET picture = "./img/players/3.jpg" WHERE id = 3;
 UPDATE player SET picture = "./img/players/4.jpg" WHERE id = 4;
 UPDATE player SET picture = "./img/players/5.jpg" WHERE id = 5;
+UPDATE player SET picture = "./img/players/7.jpg" WHERE id = 7;
 
 INSERT INTO game (name, publisher, releaseDate, rating) VALUES ("Pacifist Pigs", "Back Bacon Inc.", "2010-04-01", "EC");
 INSERT INTO game (name, publisher, releaseDate, rating) VALUES ("Nuke Dukem", "NorKor", "1000-01-01", "M");
