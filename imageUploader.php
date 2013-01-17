@@ -11,11 +11,17 @@ $allowedMimes = array("image/jpg", "image/pjpeg", "image/gif", "image/png");
 $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 $maxSize = 20000;
 
+// retrieve player id from the push request
+$pid = intval($_REQUEST['pid']);
+// set the location to store the picture
 $target_path = "img/players/";
 // Use the Player's ID to name the file (extra-step for ensure the right picture goes to the correct player)
-$pid = intval($_REQUEST['pid']);
 $filename = $pid . "." . $ext;
 $target_path = $target_path.basename($filename);
+
+// Set up the session parameters
+session_set_cookie_params(0);
+session_start();
 
 // Checks if file type is allowed and file size is allowed
 // if (in_array($ext, $allowedExts) && in_array($type, $allowedMimes) && $size <= $maxSize) {
@@ -31,19 +37,34 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
       		mysql_query($query);
       		mysql_close($con);
 
-			// Dynamically grab the PlayerID to ensure we go to the correct "profile"
-			header('Location: profile.php?pid=' . $pid . '&success=true', true, 302) ;
+      		// pass message that upload was successful
+			$_SESSION['success'] = true;
+			$_SESSION['message'] = "Uploaded image successfully.";
+			// REPLACE = 'TRUE', CODE 302 = 'FOUND'
+			header('Location: playerProfile.php', true, 302);
 		}
 		else {
-			echo "There was an error uploading the file. Please try again.";
+			// echo "There was an error uploading the file. Please try again.";
+			$_SESSION['success'] = false;
+			$_SESSION['error'] = "There was an error uploading the file. Please try again.";
+			// REPLACE = 'TRUE', CODE 304 = 'NOT MODIFIED'
+			header('Location: playerProfile.php', true, 304);
 		}
 	}
 	else { //Error occurred
 		echo getError($error);
+		$_SESSION['success'] = false;
+		$_SESSION['error'] = getError($error);
+		// CODE 304 = 'NOT MODIFIED'
+		header('Location: playerProfile.php', true, 304);
 	}
 }
 else { //Error: invalid file type or file size too large
 	echo "File was wrong file type or too large.";
+	$_SESSION['success'] = false;
+	$_SESSION['error'] = "File was wrong file type or too large.";
+	// CODE 304 = 'NOT MODIFIED'
+	header('Location: playerProfile.php', true, 304);
 }
 
 // Returns error message

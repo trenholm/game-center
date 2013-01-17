@@ -50,8 +50,9 @@
       <div class="row-fluid">
         <div class="span12">
           <div class="hero-unit" style="border-radius:20px;">
-            <h1>FEATURED GAME!</h1>
-            <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+            <h1>PACIFIST PIGS!</h1>
+            <p>This little piggy just wanted world peace...</p>
+            <!-- <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p> -->
             <p><a class="btn btn-primary btn-large" href="gameDetail.php?gid=1">Learn more &raquo;</a></p>
           </div>
         </div>
