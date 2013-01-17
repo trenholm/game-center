@@ -11,7 +11,7 @@ $allowedMimes = array("image/jpg", "image/pjpeg", "image/gif", "image/png");
 $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 $maxSize = 20000;
 
-$target_path = "./img/players/";
+$target_path = "img/players/";
 // Use the Player's ID to name the file (extra-step for ensure the right picture goes to the correct player)
 $pid = intval($_REQUEST['pid']);
 $filename = $pid . "." . $ext;

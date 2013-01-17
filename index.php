@@ -19,19 +19,20 @@
       
       // Retrieve the list of games (including thumbnail image?) (order by highest scores earned)
       $games = array();
-      // $query = "SELECT id, name FROM game ORDER BY name ASC LIMIT 3;";
-      $query = "SELECT G.id, G.name FROM game G, scores S WHERE G.id = S.gameId ORDER BY S.score DESC, G.name ASC LIMIT 3;";
+      $query = "SELECT id, name, picture FROM game G, scores S WHERE G.id = S.gameId ORDER BY S.score DESC, name ASC LIMIT 3;";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $gid = $row['id'];
         $name = $row['name'];
+        $pic = $row['picture'];
         
-        $games[$gid] = array('id' => $gid, 'name' => $name);
+        $games[$gid] = array('id' => $gid, 'name' => $name, 'picture' => $pic);
       }
       
       // Retrieve the list of players (order by highest score first?)
       $players = array();
-      $query = "SELECT * FROM player P, scores S WHERE P.id = S.playerId ORDER BY S.score DESC, P.firstName ASC LIMIT 3;";
+      $query = "SELECT P.id, P.firstName, P.lastName, P.picture, SUM(S.score) as totalScore FROM player P, scores S" . 
+        " WHERE P.id = S.playerId GROUP BY P.id ORDER BY totalScore DESC, P.firstName ASC LIMIT 3;";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $pid = $row['id'];
@@ -55,7 +56,7 @@
           </div>
         </div>
       </div>
-      <!-- CAROUSEL TO SHOW TOP GAMES? -->
+      <!-- CAROUSEL TO SHOW TOP GAMES? || ALETERNATIVE TO HERO UNIT? -->
       <!-- <div class="row-fluid">
         <div class="span12">
           <div id="myCarousel" class="carousel slide">
@@ -107,7 +108,6 @@
               foreach ($games as $key => $value) {
                 echo '<tr><td>' . 
                   '<a href="gameDetail.php?gid=' . $value['id'] . '">';
-                  // <img style="border-radius:5px; src="">
                 if($value['picture']) {
                   echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin-right:10px;" src="img/games/' . $value['picture'] . '">';
                 }
@@ -115,9 +115,7 @@
                   echo '<i class="icon-picture icon-3x pull-left" style="margin:0px 10px 0px 0px;"></i>';
                 }
                 echo 
-                // '<div class="pull-left well well-small" style="width:20px;margin:0px 10px 0px 0px;"></div>' .
                   '<h4>' . $value['name'] . '</h4></a></td>' . 
-                  // '<td>' . $value['rating'] . '</td>' . 
                   '</tr>' . "\n";
               }
             ?>

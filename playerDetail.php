@@ -4,7 +4,7 @@
     <title>Game Center</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Game Center web application for IGS520M">
+    <meta name="description" content="Game Center web application for COSC416/IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -31,19 +31,21 @@
         $fname = $row['firstName'];
         $lname = $row['lastName'];
         $pic = $row['picture'];
+        $bday = $row['birthDate'];
         $sex = $row['sex'];
 
         $playerInfo = array('id' => $pid, 
-                                  'firstName' => $fname, 
-                                  'lastName' => $lname, 
-                                  'picture' => $pic, 
-                                  'sex' => $sex);
+                            'firstName' => $fname, 
+                            'lastName' => $lname, 
+                            'picture' => $pic, 
+                            'sex' => $sex,
+                            'birthday' => $bday);
       }
      
       // list the games this player has played
       $games = array();
-      $query = "SELECT game.id id, game.name name, score FROM game, scores" . 
-        " WHERE game.id = scores.gameId AND scores.playerId = {$player} ORDER BY name ASC;";
+      $query = "SELECT G.id id, G.name name, S.score score, G.picture picture FROM game G, scores S" . 
+        " WHERE G.id = S.gameId AND S.playerId = {$player} ORDER BY name ASC;";
       $result = mysql_query($query);
       $numGamesPlayed = mysql_num_rows($result);
       if ($numGamesPlayed > 0) {
@@ -51,6 +53,7 @@
           $gid = $row['id'];
           $gname = $row['name'];
           $gscore = $row['score'];
+          $gpic = $row['picture'];
 
           // for each game, grab the achievements the player earned (for that game)
           $achieves = array();
@@ -82,7 +85,8 @@
 
           // Store all the game information
           $games[$gid] = array('id' => $gid, 
-                              'name' => $gname, 
+                              'name' => $gname,
+                              'picture' => $gpic, 
                               'numAchieve' => $numAchieve, 
                               'earnedPoints' => $earnedPoints, 
                               'achievements' => $achieves);
@@ -106,7 +110,7 @@
           <div class="media">
           <?php 
             if($playerInfo['picture']) {
-              echo '<img class="media-object" style="border-radius:5px;margin-top:20px;" src="img/players/' . $playerInfo['picture'] . '">';
+              echo '<img class="media-object" style="border-radius:10px;margin-top:20px;" src="img/players/' . $playerInfo['picture'] . '">';
             }
             else {
               echo '<div style="font-size:50px;margin-top:65px;margin-bottom:45px;">' . 
@@ -133,6 +137,10 @@
                   <td><?php echo $playerInfo['sex']; ?></td>
                 </tr>
                 <tr>
+                  <th><span class="pull-right">Birthday</span></th>
+                  <td><?php echo $playerInfo['birthday']; ?></td>
+                </tr>
+                <tr>
                   <th><span class="pull-right">Games Played</span></th>
                   <td><?php echo $numGamesPlayed; ?></td>
                 </tr>
@@ -148,7 +156,6 @@
             <table class="table table-bordered table-striped">
               <caption></caption>
               <thead>
-                <!-- <tr><th>Game</th><th>Achievements</th><th>Points</th></tr> -->
               </thead>
               <tbody>
                 <?php 
@@ -169,11 +176,7 @@
                       echo '<h4>' . $value['name'] . '</h4>' . 
                         '</a>' . 
                         '</td>' . 
-                        '<td class="span8" colspan="2">' . 
- 
-                        // '<div class="accordion-group">' . 
-                        // '<div class="accordion-heading">' . 
-                        '<div >' . 
+                        '<td class="span8" colspan="2">' .  
                         '<div >' . 
                         '<a class="accordion-toggle" data-toggle="collapse" data-parent="#game' . $pid . '" href="#collapse' . $gid . '">' . 
                         '<h4>' . 
@@ -189,22 +192,15 @@
                         $ach = $value['achievements'];
                         foreach ($ach as $key => $value) {
                           echo '<li><strong>' . 
-                            // '<tr id="#"><td></td><td>' . 
                             $value['name'] . '</strong> on ' . 
                             $value['dateEarned'] . ' for '  .
-                            // '</td><td>' . 
                             $value['points'] . ' points: <em>"' . 
-                              // '</td><td>' . 
                             $value['remark'] . '"</em> <br></li>'
-                              // '</td></tr>'
                             ;
                         }
-
                         echo '</div>' . 
                         '</div>' . 
                         '</div></td></tr>';
-
-                      
                     }
                   }
                   else {

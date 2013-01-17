@@ -29,8 +29,9 @@
         $gid = $row['id'];
         $gname = $row['name'];
         $grate = $row['rating'];
+        $pic = $row['picture'];
 
-        $games[$gid] = array('id' => $gid, 'name' => $gname, 'rating' => $grate);
+        $games[$gid] = array('id' => $gid, 'name' => $gname, 'rating' => $grate, 'picture' => $pic);
       }
       
       mysql_close($con);
@@ -51,35 +52,19 @@
         <div class="span12">
           <br>
           <table class="table table-striped table-hover">
-            <!-- <caption>List of available games and their ESRB rating</caption> -->
-            <!-- <thead>
-              <tr><th>Name</th></tr>
-            </thead> -->
             <tbody>
               <?php 
                 foreach ($games as $key => $value) {
                   echo '<tr><td>' . 
                     '<a href="gameDetail.php?gid=' . $value['id'] . '">';
-                    // <img style="border-radius:5px; src="">
-
-                    // TO BE IMPLEMENTED BELOW
-                  // if($value['picture']) {
-                  //   echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="./img/players/' . $value['picture'] . '">';
-                  // }
-                  // else {
-                  //   echo '<i class="icon-user icon-3x icon-border pull-left" style="padding:2px 7px 2px 7px;margin:0px 10px 0px 0px;"></i>';
-                  // }
-
                   if($value['picture']) {
-                    echo '<img class="pull-left" height="50px" width="50px" style="border-radius:5px;margin:0px 10px 0px 0px;" src="img/games/' . $value['picture'] . '">';
+                    echo '<img class="pull-left" height="50px" width="50px" style="border-radius:10px;margin:0px 10px 0px 0px;" src="img/games/' . $value['picture'] . '">';
                   }
                   else {
                     echo '<i class="icon-picture icon-3x pull-left" style="margin:0px 10px 0px 0px;"></i>';
                   }
                   echo 
-                  // '<div class="pull-left well well-small" style="width:20px;margin:0px 10px 0px 0px;"></div>' .
                     '<h4>' . $value['name'] . '</h4></a></td>' . 
-                    // '<td>' . $value['rating'] . '</td>' . 
                     '</tr>' . "\n";
                 }
               ?>

@@ -22,6 +22,7 @@ CREATE TABLE player (
 	firstName VARCHAR (30),
 	lastName VARCHAR (30),
 	sex VARCHAR (6),
+	birthDate DATE,
 	picture VARCHAR (50),
 	username VARCHAR (50) NOT NULL,
 	password VARCHAR (10),
@@ -68,13 +69,13 @@ CREATE TABLE scores (
 COMMENT = 'Record of a player score for a specified game'
 ;
 
-INSERT INTO player (firstName, lastName, sex, username, password) VALUES ("Ramon", "Lawrence", "Male", "rlawrence", "123456");
-INSERT INTO player (firstName, lastName, sex, username, password) VALUES ("Patricia", "Lasserre", "Female", "plasserre", "123456");
-INSERT INTO player (firstName, lastName, sex, username, password) VALUES ("Yves", "Lucet", "Male", "ylucet", "123456");
-INSERT INTO player (firstName, lastName, sex, username, password) VALUES ("Yong", "Gao", "Male", "ygao", "123456");
-INSERT INTO player (firstName, lastName, sex, username, password) VALUES ("Bowen", "Hui", "Female", "bhui", "123456");
-INSERT INTO player (firstName, lastName, sex, username, password) VALUES ("Alan", "Paeth", "Male", "apaeth", "123456");
-INSERT INTO player (firstName, lastName, sex, username, password) VALUES ("Jodie", "Foster", "Female", "jfoster", "123456");
+INSERT INTO player (firstName, lastName, sex, birthDate, username, password) VALUES ("Ramon", "Lawrence", "Male", "1980-01-01", "rlawrence", "123456");
+INSERT INTO player (firstName, lastName, sex, birthDate, username, password) VALUES ("Patricia", "Lasserre", "Female", "1980-01-01", "plasserre", "123456");
+INSERT INTO player (firstName, lastName, sex, birthDate, username, password) VALUES ("Yves", "Lucet", "Male", "1980-01-01", "ylucet", "123456");
+INSERT INTO player (firstName, lastName, sex, birthDate, username, password) VALUES ("Yong", "Gao", "Male", "1980-01-01", "ygao", "123456");
+INSERT INTO player (firstName, lastName, sex, birthDate, username, password) VALUES ("Bowen", "Hui", "Female", "1980-01-01", "bhui", "123456");
+INSERT INTO player (firstName, lastName, sex, birthDate, username, password) VALUES ("Alan", "Paeth", "Male", "1980-01-01", "apaeth", "123456");
+INSERT INTO player (firstName, lastName, sex, birthDate, username, password) VALUES ("Jodie", "Foster", "Female", "1990-01-01", "jfoster", "123456");
 
 UPDATE player SET picture = "1.jpg" WHERE id = 1;
 UPDATE player SET picture = "2.jpg" WHERE id = 2;

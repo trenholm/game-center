@@ -26,13 +26,12 @@
         $gameInfo['id'] = $row['id'];
         $gameInfo['name'] = $row['name'];
         $gameInfo['rating'] = $row['rating'];
+        $gameInfo['picture'] = $row['picture'];
         $gameInfo['publisher'] = $row['publisher'];
         $gameInfo['releaseDate'] = $row['releaseDate'];
-        // photo & other "extras"
       }
       
       // Retrieve the total number of players who play this game
-      // CURRENTLY INCORRECT! Need to return the number of PLAYERS who have played this game!!
       $numPlayers = 0;
       $query = "SELECT COUNT(*) AS total FROM scores WHERE gameId = {$gid};";
       $result = mysql_query($query);
@@ -87,15 +86,15 @@
           ?>
         </div>
       </div><!--/game title-->
-          <!-- Photo(s) of the game/gameplay
-          Number of players who have played this game
-          Number/List of achievements
-          Total number of achievements earned by players?
-          Top 10 list of highest scoring players! (click on player name to go to PlayerDetail)
+      <!-- Photo(s) of the game/gameplay
+      Number of players who have played this game
+      Number/List of achievements
+      Total number of achievements earned by players?
+      Top 10 list of highest scoring players! (click on player name to go to PlayerDetail)
 
-          BONUS: "Play Now" button that "allows" the user to "play" the game and recieve a score, 
-          along with "earning" some achievements?
-          -->
+      BONUS: "Play Now" button that "allows" the user to "play" the game and recieve a score, 
+      along with "earning" some achievements?
+      -->
       <!--Game Information-->
       <div class="row-fluid">
         <div class="span9">
@@ -103,8 +102,8 @@
             <!-- Game Photo -->
             <div class="span5">
               <?php
-                if($value['picture']) {
-                  echo '<img style="border-radius:5px;margin-top:20px;margin-bottom:45px;" src="img/games/' . $value['picture'] . '">';
+                if($gameInfo['picture']) {
+                  echo '<img style="border-radius:10px;margin-top:20px;margin-bottom:45px;" src="img/games/' . $gameInfo['picture'] . '">';
                 }
                 else {
                   echo '<div style="font-size:50px;margin-top:65px;margin-bottom:45px;">' . 

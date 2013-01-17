@@ -13,13 +13,24 @@
   <body>
     <?php
       $page = "player";
-      include('nav.php');
       // Connect to the database
       include('db/db_mysql.php');
-      $player = $_GET['pid'];
-      $success = $_GET['success'];
+      // $player = $_GET['pid'];
+      // $success = $_GET['success'];
 
       // This page is only viewable if logged in!
+      session_start();
+
+      // for testing purposes
+      $_SESSION['pid'] = "7";
+
+      if(session_is_registered('pid')){
+        // proceed to display profile info
+        $player = $_SESSION['pid'];
+      }
+      else {
+        // deny access to this page (redirect to home page)
+      }
 
       // list player information
       $playerInfo = array();
@@ -33,16 +44,19 @@
         $sex = $row['sex'];
 
         $playerInfo = array('id' => $pid, 
-                                  'firstName' => $fname, 
-                                  'lastName' => $lname, 
-                                  'picture' => $pic, 
-                                  'sex' => $sex);
+                            'firstName' => $fname, 
+                            'lastName' => $lname, 
+                            'picture' => $pic, 
+                            'sex' => $sex);
       }
 
       // Need ability to upload new photo to the server (c.f. PARKS UPLOAD)
       // include('uploadForm.html');
 
       mysql_close($con);
+
+      // display the navigation bar
+      include('nav.php');
     ?>
 
     <div class="container-fluid">
@@ -71,14 +85,21 @@
                 echo '<div style="font-size:50px;margin-top:65px;margin-bottom:45px;"><i class="icon-user icon-4x icon-border media-object"></i></div>';
               }
 
-              echo "<h4>Want to change your profile picture?</h4>";
+              echo "<h4>Change your profile picture?</h4>";
               include('uploadForm.php');
             ?>
           </div>
         </div>
         <div class="span9">
           <div class="row-fluid">
-            <h3 class="span12 pull-left">Your Information</h3>
+            <h3 class="span12 pull-left">Change Your Information</h3>
+
+            Name: <br>
+            E-mail: <br>
+            Password: <br>
+
+            Done (button) <br>
+
           </div>
         </div>
       </div>
