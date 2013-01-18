@@ -22,6 +22,7 @@
       // If logged IN, display FirstName with dropdown menu for more options
       if(session_is_registered('pid')) {
         $player = $_SESSION['pid'];
+
         // Connect to the database
         include('db/db_mysql.php');
         
@@ -48,6 +49,8 @@
                               'username' => $usr,
                               'password' => $pwd);
         }
+        // save playerInfo to the session
+        $_SESSION['playerInfo'] = $playerInfo;
         mysql_close($con);
 
         // If an update action took place
@@ -73,6 +76,10 @@
           // clear the action session variables
           unset($_SESSION['success']);
         }
+      }
+      else {
+        // if not logged in, then force user to go to the index page
+        header("Location: index.php", true, 302);
       }
     ?>
     <div class="container-fluid">
@@ -107,42 +114,55 @@
             <h3 class="span12 pull-left">Your Information</h3>
           </div>
           <div class="row-fluid">
-            <table class="span12 table-condensed">
-              <thead></thead>
-              <tbody>
-                <tr>
-                  <td class="span4"><strong><span class="pull-right">First name</span></strong></td>
-                  <td class="span8"><?php echo $playerInfo['firstName']; ?></td>
-                </tr>
-                <tr>
-                  <th><span class="pull-right">Last name</span></th>
-                  <td><?php echo $playerInfo['lastName']; ?></td>
-                </tr>
-                <tr>
-                  <th><span class="pull-right">Sex</span></th>
-                  <td><?php echo $playerInfo['sex']; ?></td>
-                </tr>
-                <tr>
-                  <th><span class="pull-right">Birthday</span></th>
-                  <td><?php echo '<input type="date" name="birthday" value="' . $playerInfo['birthday'] . '">'; ?></td>
-                </tr>
-                <tr>
-                  <th><span class="pull-right">Username</span></th>
-                  <td><?php echo '<input type="text" name="username" value="' . $playerInfo['username'] . '">'; ?></td>
-                </tr>
-                <tr>
-                  <th><span class="pull-right">Password</span></th>
-                  <td><?php echo '<input type="password" name="password" value="' . $playerInfo['password'] . '">'; ?></td>
-                </tr>
-                <tr>
-                  <th><span class="pull-right">Confirm password</span></th>
-                  <td><?php echo '<input type="password" name="password-confirm" value="">'; ?></td>
-                </tr>
-                <tr>
-                  <td><a class="btn btn-success" href="#">Update</a></td>
-                </tr>
-              </tbody>
-            </table>
+            <form name="updateprofile" class="form-horizontal" action="updateProfile.php" method="post">
+              <div class="control-group">
+                <label class="control-label" for="firstname"><strong>First name</strong></label>
+                <div class="controls">
+                  <?php echo '<input type="text" name="firstname" placeholder="First name" value="' . $playerInfo['firstName'] . '">'; ?>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="lastname"><strong>Last name</strong></label>
+                <div class="controls">
+                  <?php echo '<input type="text" name="lastname" placeholder="Last name" value="' . $playerInfo['lastName'] . '">'; ?>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="sex"><strong>Sex</strong></label>
+                <div class="controls">
+                  <?php echo '<input type="text" name="sex" placeholder="Sex"  value="' . $playerInfo['sex'] . '">'; ?>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="birthday"><strong>Birthday</strong></label>
+                <div class="controls">
+                  <?php echo '<input type="date" name="birthday" value="' . $playerInfo['birthday'] . '">'; ?>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="username"><strong>Username</strong></label>
+                <div class="controls">
+                  <?php echo '<input type="text" name="username" placeholder="Username" value="' . $playerInfo['username'] . '">'; ?>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="password"><strong>Password</strong></label>
+                <div class="controls">
+                  <?php echo '<input type="password" name="password" placeholder="Password" value="' . $playerInfo['password'] . '">'; ?>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="confirmpassword"><strong>Confirm password</strong></label>
+                <div class="controls">
+                  <input type="password" name="confirmpassword" placeholder="Confirm New Password">
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="controls">
+                  <button type="submit" class="btn btn-success">Update profile</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>

@@ -24,8 +24,13 @@
       $pid = $row['id'];
     }
 
-    // if there is only one result return (they logged in correctly)
+    // count the number of results
     $count = mysql_num_rows($result);
+
+    // cloase the connection to the database
+    mysql_close($con);
+
+    // if there is only one result return (they logged in correctly)
     if ($count == 1) {
 
       session_set_cookie_params(0);
@@ -39,11 +44,10 @@
       header("Location: playerProfile.php", true, 302);
     }
     else {
+      // pass message that error in sign in
       // pop up a message saying invalid log in information?
       header("Location: index.php");
     }
-
-    mysql_close($con);
   ?>
   </body>
 </html>

@@ -34,13 +34,13 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
 			// Update the database to include the new profile picture for this player
       		include('db_mysql.php');
 			$query = 'UPDATE player SET picture = "' . $filename . '" WHERE id = ' . $pid;
-      		mysql_query($query);
+      		$updated = mysql_query($query);
       		mysql_close($con);
 
       		// pass message that upload was successful
 			$_SESSION['success'] = true;
 			$_SESSION['message'] = "Uploaded image successfully.";
-			// REPLACE = 'TRUE', CODE 302 = 'FOUND'
+			// REPLACE => 'TRUE', CODE: 302 => 'FOUND'
 			header('Location: playerProfile.php', true, 302);
 		}
 		else {
@@ -55,7 +55,7 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
 		echo getError($error);
 		$_SESSION['success'] = false;
 		$_SESSION['error'] = getError($error);
-		// CODE 304 = 'NOT MODIFIED'
+		// CODE: 304 => 'NOT MODIFIED'
 		header('Location: playerProfile.php', true, 304);
 	}
 }
@@ -63,7 +63,7 @@ else { //Error: invalid file type or file size too large
 	echo "File was wrong file type or too large.";
 	$_SESSION['success'] = false;
 	$_SESSION['error'] = "File was wrong file type or too large.";
-	// CODE 304 = 'NOT MODIFIED'
+	// CODE: 304 => 'NOT MODIFIED'
 	header('Location: playerProfile.php', true, 304);
 }
 
