@@ -25,7 +25,7 @@ CREATE TABLE player (
 	birthDate DATE,
 	picture VARCHAR (50),
 	username VARCHAR (50) NOT NULL,
-	password VARCHAR (10),
+	password VARCHAR (10) NOT NULL,
 	PRIMARY KEY (id),
 	UNIQUE (username)
 )
