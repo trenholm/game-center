@@ -9,7 +9,7 @@ $allowedExts = array("jpg", "jpeg", "gif", "png");
 $allowedMimes = array("image/jpg", "image/pjpeg", "image/gif", "image/png");
 //$ext = end(explode(".", $filename));
 $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-$maxSize = 20000;
+$maxSize = 200000;
 
 // retrieve player id from the push request
 $pid = intval($_REQUEST['pid']);
@@ -32,7 +32,7 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
 			echo "The file ".basename($filename)." has been uploaded.";
 
 			// Update the database to include the new profile picture for this player
-      		include('db_mysql.php');
+      		include('db/db_mysql.php');
 			$query = 'UPDATE player SET picture = "' . $filename . '" WHERE id = ' . $pid;
       		$updated = mysql_query($query);
       		mysql_close($con);
@@ -41,6 +41,7 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
 			$_SESSION['success'] = true;
 			$_SESSION['message'] = "Uploaded image successfully.";
 			// REPLACE => 'TRUE', CODE: 302 => 'FOUND'
+			header("Cache-Control: no-cache");
 			header('Location: playerProfile.php', true, 302);
 		}
 		else {
@@ -48,23 +49,24 @@ if (in_array($ext, $allowedExts) && $size <= $maxSize) {
 			$_SESSION['success'] = false;
 			$_SESSION['error'] = "There was an error uploading the file. Please try again.";
 			// REPLACE = 'TRUE', CODE 304 = 'NOT MODIFIED'
-			header('Location: playerProfile.php', true, 304);
+			header("Cache-Control: no-cache");
+			header('Location: playerProfile.php', true, 302);
 		}
 	}
 	else { //Error occurred
 		echo getError($error);
 		$_SESSION['success'] = false;
 		$_SESSION['error'] = getError($error);
-		// CODE: 304 => 'NOT MODIFIED'
-		header('Location: playerProfile.php', true, 304);
+		header("Cache-Control: no-cache");
+		header('Location: playerProfile.php', true, 302);
 	}
 }
 else { //Error: invalid file type or file size too large
 	echo "File was wrong file type or too large.";
 	$_SESSION['success'] = false;
 	$_SESSION['error'] = "File was wrong file type or too large.";
-	// CODE: 304 => 'NOT MODIFIED'
-	header('Location: playerProfile.php', true, 304);
+	header("Cache-Control: no-cache");
+	header('Location: playerProfile.php', true, 302);
 }
 
 // Returns error message

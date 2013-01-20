@@ -65,34 +65,36 @@
             // drop-down sign in box
             echo '
               <div id="signInModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="signInModalLabel" aria-hidden="true">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times</button>
-                <h3 id="myModalLabel">Register or Sign In</h3>
-              </div>
-              <div class="modal-body">
-                <form name="signin" class="form-horizontal" action="login.php" method="post">
-                  <div class="control-group">
-                    <label class="control-label" for="username">Username</label>
-                    <div class="controls">
-                      <input type="text" id="username" name="username" placeholder="Username">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times</button>
+                  <h3 id="myModalLabel">Sign In or Register</h3>
+                </div>
+                <div class="modal-body">
+                  <form name="signin" class="form-horizontal" action="login.php" method="post">
+                    <div class="control-group">
+                      <label class="control-label" for="username">Username</label>
+                      <div class="controls">
+                        <input type="text" id="username" name="username" autofocus placeholder="Username">
+                      </div>
                     </div>
-                  </div>
-                  <div class="control-group">
-                    <label class="control-label" for="password">Password</label>
-                    <div class="controls">
-                      <input type="password" id="password" name="password" placeholder="Password" onKeyPress="return checkSubmit(event)">
+                    <div class="control-group">
+                      <label class="control-label" for="password">Password</label>
+                      <div class="controls">
+                        <input type="password" name="password" placeholder="Password" onKeyPress="return checkSubmit(event)">
+                      </div>
                     </div>
-                  </div>
-                  <div class="control-group">
-                    <div class="controls">
-                      <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                      <button type="submit" class="btn btn-primary btn-success">Sign In</button>
+                    <div class="control-group">
+                      <div class="controls">
+                        <button type="submit" class="btn btn-primary btn-success">Sign In</button>
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                      </div>
                     </div>
-                  </div>
-                </form>
-
-              </div>
-            </div>';
+                  </form>
+                  <hr>
+                  <h4>Need an account?</h4>
+                  <a class="btn btn-primary offset1" href="newPlayer.php">Register now!</a>
+                </div>
+              </div>';
           }
         
         ?>
