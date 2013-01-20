@@ -65,7 +65,7 @@
       // Retrieve list of top-scoring players
       $players = array();
       $query = "SELECT playerId, firstName, lastName, score FROM scores, player " . 
-        "WHERE scores.playerId = player.id AND scores.gameId = " . $gid . " LIMIT 10";
+        "WHERE scores.playerId = player.id AND scores.gameId = " . $gid . " ORDER BY score DESC, firstName ASC LIMIT 10";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $pid = $row['playerId'];
