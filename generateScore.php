@@ -181,7 +181,7 @@ else {
 
 	// modify the score the player sees based on earned achievements!
 	$score += $earnedPoints;
-	echo "<br>Total points earned: " . $score;
+	echo "<br><strong>Total points earned: </strong>" . $score;
 
 	// Retrieve the player's previous score
 	$gameScore = 0;

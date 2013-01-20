@@ -48,7 +48,8 @@
               '<i class="icon-user"></i> ' . $username . '</a>';
             // include down icon
             echo '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' . 
-              '<li><a href="playerProfile.php" tabindex="-1">Your profile</a></li>' . 
+              '<li><a href="playerDetail.php?pid='.$player.'" tabindex="-1">Your profile</a></li>' .
+              '<li><a href="playerProfile.php" tabindex="-1">Edit profile</a></li>' . 
               '<li><a href="logout.php" tabindex="-1">Sign out</a></li>';
             echo '</ul></li>';
           }

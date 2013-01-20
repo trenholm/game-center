@@ -112,7 +112,6 @@
               ?>
               <!-- Play the game! -->
               <?php include('playGame.php'); ?>
-              <!-- <p><a class="btn btn-primary btn-block btn-large disabled" href="#">Play Now!</a></p> -->
             </div><!--/game photo-->
             <div class="span7">
               <!-- Game Info -->

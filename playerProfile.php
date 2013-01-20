@@ -133,10 +133,12 @@
         <!-- Player Information -->
         <div class="span9">
           <div class="row-fluid">
-            <h3 class="span12 pull-left">Your Information</h3>
-          </div>
-          <div class="row-fluid">
             <form name="updateprofile" class="form-horizontal" action="updateProfile.php" method="post">
+              <div class="control-group">
+                <div class="controls">
+                  <h3 class="span12 pull-left">Edit Your Information</h3>
+                </div>
+              </div>
               <div class="control-group">
                 <label class="control-label" for="firstname"><strong>First name</strong></label>
                 <div class="controls">
