@@ -27,7 +27,7 @@
     // count the number of results
     $count = mysql_num_rows($result);
 
-    // cloase the connection to the database
+    // close the connection to the database
     mysql_close($con);
 
     // if there is only one result return (they logged in correctly)
@@ -36,7 +36,7 @@
       session_set_cookie_params(0);
       session_start();
       $_SESSION["username"] = $username;
-      $_SESSION["password"] = $password;
+      // $_SESSION["password"] = $password;
       $_SESSION["pid"] = $pid;
 
       // successfully logged in, so go to the player's profile page
