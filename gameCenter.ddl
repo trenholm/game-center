@@ -38,7 +38,7 @@ CREATE TABLE achievement (
 		gameId INT NOT NULL,
 		name VARCHAR (50),
 		description VARCHAR (100),
-		points INT,
+		points INT DEFAULT 0,
 		PRIMARY KEY (id),
 		FOREIGN KEY (gameId) REFERENCES game (id) ON DELETE CASCADE ON UPDATE CASCADE
 )
@@ -61,7 +61,7 @@ COMMENT = 'Association between individual players and achievements'
 CREATE TABLE scores (
 	playerId INT NOT NULL,
 	gameId INT NOT NULL,
-	score INT,
+	score INT DEFAULT 0,
 	PRIMARY KEY (playerId, gameID),
 	FOREIGN KEY (playerId) REFERENCES player (id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (gameId) REFERENCES game (id) ON DELETE CASCADE ON UPDATE CASCADE

@@ -9,6 +9,7 @@
   session_destroy();
 
   // send the user back to the index page
+  header("Cache-Control: no-cache");
   header("Location: index.php", true, 302);
   ?>
   </body>

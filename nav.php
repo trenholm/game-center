@@ -43,12 +43,9 @@
               echo '<li class="dropdown">';
             }
 
-            // echo '<li class="dropdown">';
-
             // Display dropdown menu to update your profile or log out
             echo '<a href="#" class="navbar-link dropdown-toggle" data-toggle="dropdown">' . 
-              '<i class="icon-user"></i> ' . 
-              $username . '</a>';
+              '<i class="icon-user"></i> ' . $username . '</a>';
             // include down icon
             echo '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' . 
               '<li><a href="playerProfile.php" tabindex="-1">Your profile</a></li>' . 
@@ -60,8 +57,7 @@
 
             // Display button to sign in
             echo '<li><a href="#signInModal" role="button" class="navbar-link" data-toggle="modal">' . 
-              '<i class="icon-user"></i> ' . 
-              'Sign In</a></li>';
+              '<i class="icon-user"></i> ' . 'Sign In</a></li>';
             // drop-down sign in box
             echo '
               <div id="signInModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="signInModalLabel" aria-hidden="true">

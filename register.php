@@ -94,7 +94,7 @@
             echo "please confirm your new password";
             // password not changed, please try again and confirm your new password
             $_SESSION['confirm_error'] = true;
-            $_SESSION['confirm_msg'] = "You need to confirm your new <em>password</em> was not changed, please try again.";
+            $_SESSION['confirm_msg'] = "You need to confirm your new <em>password</em>, please try again.";
             header("Cache-Control: no-cache");
             header('Location: newPlayer.php', true, 302);
         }

@@ -195,7 +195,7 @@
                             $value['name'] . '</strong> on ' . 
                             $value['dateEarned'] . ' for '  .
                             $value['points'] . ' points: <em>"' . 
-                            $value['remark'] . '"</em> <br></li>'
+                            $value['remark'] . '"</em></li><br>'
                             ;
                         }
                         echo '</div>' . 

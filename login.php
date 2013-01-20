@@ -36,16 +36,17 @@
       session_set_cookie_params(0);
       session_start();
       $_SESSION["username"] = $username;
-      // $_SESSION["password"] = $password;
       $_SESSION["pid"] = $pid;
 
       // successfully logged in, so go to the player's profile page
       // refresh the profile page and send message that successfully transerred (the 302?)
+      header("Cache-Control: no-cache");
       header("Location: playerProfile.php", true, 302);
     }
     else {
       // pass message that error in sign in
       // pop up a message saying invalid log in information?
+      header("Cache-Control: no-cache");
       header("Location: index.php");
     }
   ?>
