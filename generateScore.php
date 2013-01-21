@@ -19,10 +19,19 @@ if (session_is_registered('pid')) {
 $score = rand(100, 1000);
 
 // display the score (and other information?)
-echo "You scored " . $score . " points!<br>";
+if ($score >= 800) {
+	echo '<h4>WOW! What an amazing score!</h4>';
+}
+else if ($score >= 400) {
+	echo '<h4>Yay! Great score!</h4>';
+}
+else {
+	echo '<h4>Good job!</h4>';
+}
+echo '<span class="" style="font-size:16px;">You scored ' . $score . ' points!!</span><hr>';
 
 // display any achievements that were earned during this game
-echo "<hr><h4>Achievements earned this game</h4>";
+echo "<h4>Achievements earned this game</h4>";
 
 // if the player is NOT signed in, then just display message telling them to register & sign in
 if (!$pid) {
@@ -93,11 +102,11 @@ else {
 				break;
 			}
 		}
-		echo "You earned the FIRST achievement! :)" . "<br>";
+		// echo "You earned the FIRST achievement! :)" . "<br>";
 	}
 
-	// the player has a 5 percent chance of completing the entire game (and earning the remaining achievements)
-	if ($percent <= 5 && $available > 0) { 
+	// the player has a 1 percent chance of completing the entire game (and earning the remaining achievements)
+	if ($percent <= 1 && $available > 0  && $score >= 800) { 
 		foreach ($achievements as $key => $value) {
 			// record that this achievement has been earned
 			$aid = $key;
@@ -111,12 +120,11 @@ else {
 			unset($achievements[$aid]);
 			$available--;
 		}
-		echo "Earned all remaining achievements!";
+		// echo "Earned all remaining achievements!";
 	}
-	// the player has a 30 percent chance of earning up to (2) remaining achievements
-	else if ($percent <= 30 && $available > 0) {
+	// the player has a 20 percent chance of earning up to (2) remaining achievements
+	else if ($percent <= 20 && $available > 0 && $score >= 400) {
 		// loop twice (if possible)
-		$i = 0;
 		for ($i=0; $i < 2; $i++) { 
 			// if no more achievements remain, then stop
 			if ($available === 0) {
@@ -140,10 +148,10 @@ else {
 			unset($achievements[$aid]);
 			$available--;
 		}
-		echo "Earned (" . $i . ") achievements!";
+		// echo "Earned (2) achievements!";
 	}
-	// the player has a 70 percent chance of earning (1) of the remaining achievements
-	else if ($percent <= 70 && $available > 0) {
+	// the player has a 50 percent chance of earning (1) of the remaining achievements
+	else if ($percent <= 50 && $available > 0) {
 		// randomly select one of the achievements
 		$index = rand(0,$available-1);
 		$keys = array_keys($achievements);
@@ -160,15 +168,16 @@ else {
 		// remove achievement from list of remaining
 		unset($achievements[$aid]);
 		$available--;
-		echo "Earned (1) achievement!";
+		// echo "Earned (1) achievement!";
 	}
 	// the player failed to earn any achievements (or there are no more achievements left to earn)
 	else if (count($newlyEarned) === 0) {
-		echo "Sorry no achievements earned this time. Play again!";
+		echo "Sorry no achievements earned this time. Play again!<br>";
 	}
 
 	// if any achievements were earned
 	if (count($newlyEarned) > 0) {
+		echo '<span class="badge badge-info">'. count($newlyEarned) . '</span> achievements earned!';
 		// display the list of achievements the player earned this game
 		foreach ($newlyEarned as $key => $value) {
 			echo '<li><strong>' . 

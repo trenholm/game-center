@@ -25,20 +25,25 @@ echo '
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlhttp.send("gid='.$gid.'");
   }
+  function refreshPage() {
+    $("#playGame").on("hidden", function () {
+      window.location.reload();
+    });
+  }
 </script>
 ';
 ?>
 <p><a class="btn btn-primary btn-block btn-large" data-toggle="modal" href="#playGame" onCLick="generateRandomScore();">Play Now!</a></p>
 <div class="modal hide fade" id="playGame" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times</button>
-    <h3><?php echo $gameInfo['name']; ?></h3>
+  <div class="modal-header navbar-inner">
+    <button type="button" class="close" data-dismiss="modal" onClick="refreshPage();">&times</button>
+    <h2><?php echo $gameInfo['name']; ?></h2>
   </div>
   <div class="modal-body">
     <div id="gameResults"></div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-success" onClick="generateRandomScore();">Play Again?</button>
-    <a href="#" class="btn" data-dismiss="modal">Close</a>
+    <a href="#" class="btn" data-dismiss="modal" onClick="refreshPage();">Close</a>
   </div>
 </div>
