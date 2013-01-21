@@ -7,6 +7,7 @@
     <meta name="description" content="Game Center web application for IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
+    <link rel="shortcut icon apple-touch-icon" href="img/pig.png" />
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
@@ -86,15 +87,6 @@
           ?>
         </div>
       </div><!--/game title-->
-      <!-- Photo(s) of the game/gameplay
-      Number of players who have played this game
-      Number/List of achievements
-      Total number of achievements earned by players?
-      Top 10 list of highest scoring players! (click on player name to go to PlayerDetail)
-
-      BONUS: "Play Now" button that "allows" the user to "play" the game and recieve a score, 
-      along with "earning" some achievements?
-      -->
       <!--Game Information-->
       <div class="row-fluid">
         <div class="span9">

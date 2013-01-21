@@ -7,6 +7,7 @@
     <meta name="description" content="Game Center web application for IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
+    <link rel="shortcut icon apple-touch-icon" href="img/pig.png" />
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
@@ -19,7 +20,8 @@
       
       // Retrieve the list of games (including thumbnail image?) (order by highest scores earned)
       $games = array();
-      $query = "SELECT id, name, picture FROM game G, scores S WHERE G.id = S.gameId ORDER BY S.score DESC, name ASC LIMIT 3;";
+      $query = "SELECT id, name, SUM(score) score, picture FROM game, scores" . 
+        " WHERE id = gameId GROUP BY id ORDER BY score DESC, name ASC LIMIT 3;";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $gid = $row['id'];
@@ -31,8 +33,8 @@
       
       // Retrieve the list of players (order by highest score first?)
       $players = array();
-      $query = "SELECT P.id, P.firstName, P.lastName, P.picture, SUM(S.score) as totalScore FROM player P, scores S" . 
-        " WHERE P.id = S.playerId GROUP BY P.id ORDER BY totalScore DESC, P.firstName ASC LIMIT 3;";
+      $query = "SELECT id, firstName, lastName, picture, SUM(score) totalScore FROM player, scores" . 
+        " WHERE id = playerId GROUP BY id ORDER BY totalScore DESC, firstName ASC LIMIT 3;";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $pid = $row['id'];
@@ -49,59 +51,23 @@
       <!-- FEATURED GAME ROW / HERO UNIT -->
       <div class="row-fluid">
         <div class="span12">
-          <div class="hero-unit" style="border-radius:20px;">
-            <h1>PACIFIST PIGS!</h1>
+          <img class="pull-right" height="250" width="250" style="border-radius:5px;margin-right:20px;margin-top:20px;" src="img/pig.png">
+          <!-- <div class="hero-unit hero" style="border-radius:20px;"> -->
+          <div class="hero-unit hero" style="border-radius:20px;background-image:url(img/vortex-light.jpg);background-position:center;"> 
+            <h1 style="text-shadow:2px 2px #5BC0DE;">PACIFIST PIGS!</h1>
             <p>This little piggy just wanted world peace...</p>
-            <!-- <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p> -->
             <p><a class="btn btn-primary btn-large" href="gameDetail.php?gid=1">Learn more &raquo;</a></p>
           </div>
         </div>
       </div>
-      <!-- CAROUSEL TO SHOW TOP GAMES? || ALETERNATIVE TO HERO UNIT? -->
-      <!-- <div class="row-fluid">
-        <div class="span12">
-          <div id="myCarousel" class="carousel slide">
-              <div class="carousel-inner">
-                <div class="active item">
-                  <div style="height:200px;">
-                    <h1>This little piggy just wanted world peace...</h1>
-                  </div>
-                  <div class="carousel-caption">
-                    <h4>Pacifist Pigs</h4>
-                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                    <p><a class="btn btn-primary btn-large" href="./gameDetail.php?gid=1">Learn more &raquo;</a></p>
-                  </div>
-                </div>
-                <div class="item">
-                  <div style="height:200px;">
-                    <h1>Second game</h1>
-                  </div>
-                  <div class="carousel-caption">
-                    <h4>Name</h4>
-                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                    <p><a class="btn btn-primary btn-large" href="./gameDetail.php?gid=1">Learn more &raquo;</a></p>
-                  </div>
-                </div>
-                <div class="item">
-                  <div style="height:200px;">
-                    <h1>Third game</h1>
-                  </div>
-                  <div class="carousel-caption"><h4>Name</h4></div>
-                </div>
-              </div>
-              <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-              <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-            </div>
-        </div>
-      </div> -->
       <!-- Sub-Articles? -->
       <div class="row-fluid">
         <div class="span6">
           <table class="table table-bordered table-striped">
             <thead>
-              <tr><td>
-                <h2>TOP GAMES</h2>
-                <a class="btn offset1" href="gameList.php">View more games &raquo;</a>
+              <tr class="error"><td>
+                <h2>Top Games</h2>
+                <a class="btn btn-info" href="gameList.php">View more games &raquo;</a>
               </td></tr>
             </thead>
             <tbody>
@@ -127,8 +93,8 @@
           <table class="table table-bordered table-striped">
             <thead>
               <tr><td>
-                <h2>TOP PLAYERS</h2>
-                <a class="btn offset1" href="playerList.php">See more players &raquo;</a>
+                <h2>Top Players</h2>
+                <a class="btn btn-info" href="playerList.php">See more players &raquo;</a>
               </td></tr>
             </thead>
             <tbody>
@@ -152,7 +118,6 @@
       </div><!--/row-->
       <?php include('footer.php'); ?>
     </div>
-    
     <?php require_once('requiredJS.php'); ?>
   </body>
 </html>
