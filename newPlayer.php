@@ -7,6 +7,7 @@
     <meta name="description" content="Game Center web application for COSC416/IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
+    <link rel="shortcut icon apple-touch-icon" href="img/pig.png" />
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
