@@ -4,57 +4,101 @@
   </head>
   <body>
   <?php
+    // start session
+    session_set_cookie_params(0);
+    session_start();
 
+    // retrieve new user information
+    $username = $_REQUEST['username'];
+    $password = $_REQUEST['password'];
+    $cnfmpwd = $_REQUEST['confirmpassword'];
+
+    // To protect MySQL injection
+    $username = mysql_real_escape_string(stripslashes($username));
+    $password = mysql_real_escape_string(stripslashes($password));
+    $cnfmpwd = mysql_real_escape_string(stripslashes($cnfmpwd));
+
+    echo "<br>" . $username;
+    echo "<br>" . $password;
+    echo "<br>" . $cnfmpwd;
 
     // check if username already exists in the DB
+    include('db/db_mysql.php');
+    $query = 'SELECT id FROM player WHERE username = "' . $username . '";';
+    $result = mysql_query($query);
+    while ($row = mysql_fetch_assoc($result)) {
+      $pid = $row['id'];
+    }
+    $count = mysql_num_rows($result);
+    mysql_close($con);
 
-    // if not, proceed with insert statement (minimum details required = username, password)
+    // if there are any results, then there is a conflict!
+    echo $count . " results for the username: " . $username . "<br>";
+    if ($count >= 1) {
+        // stop and warn the user that username already taken (redirect back to new player page)
+        echo "<br> username already taken, please try again";
 
-    // if so, stop and warn the user that username already taken
+        echo "<br> warning: conflicting username: " . $username;
+        $_SESSION['username_error'] = true;
+        $_SESSION['username_msg'] = "That <em>username</em> already exists, please try a changing it to a different one.";
+        header("Cache-Control: no-cache");
+        header('Location: newPlayer.php', true, 302);
+    }
+    else {
+        // if no conflict, then check for password confirmation
 
+        // check for any changes to the player's password
+        if ($password !== "" && $password === $cnfmpwd) {
+            // continue with the insert statement
+            echo "<br>" . $username;
+            echo "<br>" . $password;
+            echo "<br>" . $cnfmpwd;
 
+            include('db/db_mysql.php');
 
+            // execute the insert statement
+            $query = 'INSERT INTO player (username, password) VALUES ("'. $username . '", "' . $password . '");';
+            $result = mysql_query($query);
+            echo $query;
 
-    // // retrieve login information from user ($_POST)
-    // $username = $_REQUEST['username'];
-    // $password = $_REQUEST['password'];
+            echo "<br> successfully registered user, redirecting to profile page";
 
-    // // // To protect MySQL injection
-    // $username = stripslashes($username);
-    // $password = stripslashes($password);
-    // $username = mysql_real_escape_string($username);
-    // $password = mysql_real_escape_string($password);
+            // confirm that the user is now in the database
+            $query = 'SELECT id, username FROM player WHERE username = "' . $username . '" AND password = "' . $password . '";';
+            $result = mysql_query($query);
 
-    // // connect to the database and see if user exists
-    // include('db/db_mysql.php');
-    // $query = 'SELECT id FROM player WHERE username = "' . $username . '" AND password = "' . $password . '";';
-    // $result = mysql_query($query);
+            $pid = 0;
+            while ($row = mysql_fetch_assoc($result)) {
+              $pid = $row['id'];
+              $username = $row['username'];
+            }
 
-    // $pid = 0;
-    // while ($row = mysql_fetch_assoc($result)) {
-    //   $pid = $row['id'];
-    // }
+            // close the connection to the database
+            mysql_close($con);
+            
+            // update the session variables
+            $_SESSION["username"] = $username;
+            $_SESSION["pid"] = $pid;
 
-    // // if there is only one result return (they logged in correctly)
-    // $count = mysql_num_rows($result);
-    // if ($count == 1) {
+            echo "You have successfully registered.";
 
-    //   session_set_cookie_params(0);
-    //   session_start();
-    //   $_SESSION["username"] = $username;
-    //   $_SESSION["password"] = $password;
-    //   $_SESSION["pid"] = $pid;
-
-    //   // successfully logged in, so go to the player's profile page
-    //   // refresh the profile page and send message that successfully transerred (the 302?)
-    //   header("Location: playerProfile.php", true, 302);
-    // }
-    // else {
-    //   // pop up a message saying invalid log in information?
-    //   header("Location: index.php");
-    // }
-
-    // mysql_close($con);
+            // if successfully registered user, redirect to the player profile to update their information?
+            $_SESSION['success'] = true;
+            $_SESSION['message'] = "Congratulations, you have successfully registered. Update your information now!";
+            header("Cache-Control: no-cache");
+            header('Location: playerProfile.php', true, 302);
+            
+            
+        }
+        else {
+            echo "please confirm your new password";
+            // password not changed, please try again and confirm your new password
+            $_SESSION['confirm_error'] = true;
+            $_SESSION['confirm_msg'] = "You need to confirm your new <em>password</em>, please try again.";
+            header("Cache-Control: no-cache");
+            header('Location: newPlayer.php', true, 302);
+        }
+    }
   ?>
   </body>
 </html>

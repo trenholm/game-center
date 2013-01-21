@@ -7,6 +7,7 @@
     <meta name="description" content="Game Center web application for IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
+    <link rel="shortcut icon apple-touch-icon" href="img/pig.png" />
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
@@ -16,8 +17,8 @@
       include('nav.php');
       // Connect to the database
       include('db/db_mysql.php');
-      $searchParam = $_GET['name'];
-      
+      $searchParam = mysql_real_escape_string($_GET['search']);
+
       $games = array();
       $query = "SELECT * FROM game";
       if($searchParam) {
@@ -40,9 +41,21 @@
       <div class="row-fluid">
         <!-- Search bar -->
         <div class="span12">
-          <form class="form-search" action="gameList.php" method="get">
-            <div class="input-append span12">
-              <input type="text" class="span11 search-query" name="name" placeholder="">
+          <form class="form-search" name="search-form" action="gameList.php" method="get">
+            <div class="input-append span12"> 
+              <?php 
+                include('db/db_mysql.php');
+                $gameNames = array();
+                $query = "SELECT name FROM game ORDER BY name ASC;";
+                $result = mysql_query($query);
+                while ($row = mysql_fetch_assoc($result)) {
+                  $gameNames[] = $row['name'];
+                }
+                mysql_close($con);
+                echo '<input type="text" class="span11 search-query" name="search" placeholder="" autocomplete="off" ' . 
+                  ' data-provide="typeahead" data-source="' . '[&quot;' . implode('&quot;,&quot;', $gameNames) . '&quot;]' . '" >';  
+                ?>
+              <!-- <input type="text" class="span11 search-query" name="search" placeholder="" autocomplete="off" autofocus> -->
               <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
             </div>
           </form>

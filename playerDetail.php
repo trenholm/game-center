@@ -7,6 +7,7 @@
     <meta name="description" content="Game Center web application for COSC416/IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
+    <link rel="shortcut icon apple-touch-icon" href="img/pig.png" />
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
@@ -75,21 +76,36 @@
                                     'dateEarned' => $aearned);
           }
 
-          // sum up the total points earned for this game
+          // sum up the total points earned from achievements from this game
           $earnedPoints = 0;
           foreach ($achieves as $key => $value) {
             $earnedPoints += $value['points'];
           }
-          // add each game's score to the player's total score
-          $totalScore += $earnedPoints;
+
+          // Retrieve the points earned (score) the player has for this game
+          $score = 0;
+          $subquery = "SELECT score FROM scores WHERE gameId = {$gid} AND playerId = {$player}";
+          $subresult = mysql_query($subquery);
+          while ($row = mysql_fetch_assoc($subresult)) {
+            $score = $row['score'];
+            $totalScore += $score;
+          }
 
           // Store all the game information
           $games[$gid] = array('id' => $gid, 
                               'name' => $gname,
                               'picture' => $gpic, 
                               'numAchieve' => $numAchieve, 
+                              'score' => $score, 
                               'earnedPoints' => $earnedPoints, 
                               'achievements' => $achieves);
+        }
+
+        // total the player's score across all games
+        $query = "SELECT score FROM scores WHERE playerId = {$player}";
+        $result = mysql_query($query);
+        while ($row = mysql_fetch_assoc($result)) {
+          $score = $row['score'];
         }
       }
       mysql_close($con);
@@ -177,11 +193,10 @@
                         '</a>' . 
                         '</td>' . 
                         '<td class="span8" colspan="2">' .  
-                        '<div >' . 
+                        '<div >' . '<span style="font-size:17.5px;"><strong>Game score: </strong>' . $value['score'] . ' points</span>' . 
                         '<a class="accordion-toggle" data-toggle="collapse" data-parent="#game' . $pid . '" href="#collapse' . $gid . '">' . 
-                        '<h4>' . 
-                        $value['numAchieve'] . 
-                        ' achievements for ' . $value['earnedPoints'] . ' points' . 
+                        '<h4>' . $value['earnedPoints'] . ' points from ' . 
+                        $value['numAchieve'] . ' achievements ' . 
                         ' <i class="icon-chevron-down"></i>' . 
                         '</h4>' . 
                         '</a>' . 
@@ -195,7 +210,7 @@
                             $value['name'] . '</strong> on ' . 
                             $value['dateEarned'] . ' for '  .
                             $value['points'] . ' points: <em>"' . 
-                            $value['remark'] . '"</em> <br></li>'
+                            $value['remark'] . '"</em></li>'
                             ;
                         }
                         echo '</div>' . 

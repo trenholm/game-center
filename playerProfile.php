@@ -54,7 +54,7 @@
         mysql_close($con);
 
         // If an update action took place
-        if(session_is_registered('success')) {
+        if (session_is_registered('success')) {
           $success = $_SESSION['success'];
           // if update was successful
           if ($success) {
@@ -73,6 +73,28 @@
 
             unset($_SESSION['error']);
           }
+
+          // check for username update error
+          if (session_is_registered('username_error')) {
+            // display the warning / error message ALERT!
+            echo '<div class="alert alert-error fade in">' . 
+              '<button type="button" class="close" data-dismiss="alert">&times</button>' . 
+              '<strong>Warning: </strong>' . $_SESSION['username_msg'] . '</div>';
+
+            unset($_SESSION['username_error']);
+            unset($_SESSION['username_msg']);
+          }
+          // check for password update error
+          if (session_is_registered('confirm_error')) {
+            // display the warning / error message ALERT!
+            echo '<div class="alert alert-error fade in">' . 
+              '<button type="button" class="close" data-dismiss="alert">&times</button>' . 
+              '<strong>Warning: </strong>' . $_SESSION['confirm_msg'] . '</div>';
+
+            unset($_SESSION['confirm_error']);
+            unset($_SESSION['confirm_msg']);
+          }
+
           // clear the action session variables
           unset($_SESSION['success']);
         }
@@ -111,10 +133,12 @@
         <!-- Player Information -->
         <div class="span9">
           <div class="row-fluid">
-            <h3 class="span12 pull-left">Your Information</h3>
-          </div>
-          <div class="row-fluid">
             <form name="updateprofile" class="form-horizontal" action="updateProfile.php" method="post">
+              <div class="control-group">
+                <div class="controls">
+                  <h3 class="span12 pull-left">Edit Your Information</h3>
+                </div>
+              </div>
               <div class="control-group">
                 <label class="control-label" for="firstname"><strong>First name</strong></label>
                 <div class="controls">
@@ -160,6 +184,7 @@
               <div class="control-group">
                 <div class="controls">
                   <button type="submit" class="btn btn-success">Update profile</button>
+                  <button type="reset" class="btn">Reset</button>
                 </div>
               </div>
             </form>

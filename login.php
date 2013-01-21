@@ -27,7 +27,7 @@
     // count the number of results
     $count = mysql_num_rows($result);
 
-    // cloase the connection to the database
+    // close the connection to the database
     mysql_close($con);
 
     // if there is only one result return (they logged in correctly)
@@ -36,16 +36,17 @@
       session_set_cookie_params(0);
       session_start();
       $_SESSION["username"] = $username;
-      $_SESSION["password"] = $password;
       $_SESSION["pid"] = $pid;
 
       // successfully logged in, so go to the player's profile page
       // refresh the profile page and send message that successfully transerred (the 302?)
+      header("Cache-Control: no-cache");
       header("Location: playerProfile.php", true, 302);
     }
     else {
       // pass message that error in sign in
       // pop up a message saying invalid log in information?
+      header("Cache-Control: no-cache");
       header("Location: index.php");
     }
   ?>

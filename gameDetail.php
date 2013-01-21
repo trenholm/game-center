@@ -7,6 +7,7 @@
     <meta name="description" content="Game Center web application for IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
+    <link rel="shortcut icon apple-touch-icon" href="img/pig.png" />
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
@@ -65,7 +66,7 @@
       // Retrieve list of top-scoring players
       $players = array();
       $query = "SELECT playerId, firstName, lastName, score FROM scores, player " . 
-        "WHERE scores.playerId = player.id AND scores.gameId = " . $gid . " LIMIT 10";
+        "WHERE scores.playerId = player.id AND scores.gameId = " . $gid . " ORDER BY score DESC, firstName ASC LIMIT 10";
       $result = mysql_query($query);
       while ($row = mysql_fetch_assoc($result)) {
         $pid = $row['playerId'];
@@ -86,15 +87,6 @@
           ?>
         </div>
       </div><!--/game title-->
-      <!-- Photo(s) of the game/gameplay
-      Number of players who have played this game
-      Number/List of achievements
-      Total number of achievements earned by players?
-      Top 10 list of highest scoring players! (click on player name to go to PlayerDetail)
-
-      BONUS: "Play Now" button that "allows" the user to "play" the game and recieve a score, 
-      along with "earning" some achievements?
-      -->
       <!--Game Information-->
       <div class="row-fluid">
         <div class="span9">
@@ -110,7 +102,8 @@
                     '<i class="icon-picture icon-4x icon-border" style="background-color:#EEE;"></i></div>';
                 }
               ?>
-              <p><a class="btn btn-primary btn-block btn-large disabled" href="#">Play Now!</a></p>
+              <!-- Play the game! -->
+              <?php include('playGame.php'); ?>
             </div><!--/game photo-->
             <div class="span7">
               <!-- Game Info -->

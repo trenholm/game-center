@@ -7,6 +7,7 @@
     <meta name="description" content="Game Center web application for IGS520M">
     <meta name="author" content="Cody Clerke, Jamie McKee-Scott, Ryan Trenholm">
     <!-- Styles -->
+    <link rel="shortcut icon apple-touch-icon" href="img/pig.png" />
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="css/font-awesome.min.css" rel="stylesheet">
   </head>
@@ -16,7 +17,7 @@
       include('nav.php');
       // Connect to the database
       include('db/db_mysql.php');
-      $searchParam = mysql_real_escape_string($_GET['name']);
+      $searchParam = mysql_real_escape_string($_GET['search']);
          
       // list player information
       $players = array();
@@ -43,7 +44,7 @@
         <div class="span12">
           <form class="form-search" action="playerList.php" method="get">
             <div class="input-append span12">
-              <input type="text" class="span11 search-query" name="name" placeholder="">
+              <input type="text" class="span11 search-query" name="search" placeholder="" autocomplete="off" autofocus >
               <button type="submit" class="btn"><i class="icon-search"></i> Search</button>
             </div>
           </form>
@@ -53,10 +54,6 @@
         <div class="span12">
           <br>
           <table class="table table-striped table-hover">
-              <!-- <caption>List of available games and their ESRB rating</caption> -->
-              <!-- <thead>
-                <tr><th>Name</th></tr>
-              </thead> -->
               <tbody>
                 <?php 
                   foreach ($players as $key => $value) {
